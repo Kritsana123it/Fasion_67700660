@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dog Breed Detection</title>
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+  <script defer src="script.js"></script>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 20px; }
+    canvas { border: 1px solid #ccc; margin-top: 10px; }
+    #label { font-size: 18px; margin-top: 15px; color: green; }
+  </style>
+</head>
+<body>
+<h1>👕 ตรวจจับประเภทเสื้อผ้าด้วย YOLO</h1>
+  <input type="file" id="imageInput" accept="image/*" />
+  <br>
+  <canvas id="canvas" width="640" height="640"></canvas>
+  <div id="label"></div>
+</body>
+</html>
