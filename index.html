@@ -1,21 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <title>Dog Breed Detection</title>
-  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
-  <script defer src="script.js"></script>
-  <style>
-    body { font-family: sans-serif; text-align: center; margin-top: 20px; }
-    canvas { border: 1px solid #ccc; margin-top: 10px; }
-    #label { font-size: 18px; margin-top: 15px; color: green; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Detection | YOLOv11</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h1>👕 ตรวจจับประเภทเสื้อผ้าด้วย YOLO</h1>
-  <input type="file" id="imageInput" accept="image/*" />
-  <br>
-  <canvas id="canvas" width="640" height="640"></canvas>
-  <div id="label"></div>
+    <header class="hero">
+        <span class="badge">YOLOv11 · ONNX Runtime Web</span>
+        <h1>ตรวจจับประเภท<span class="accent">เสื้อผ้า</span></h1>
+        <p class="subtitle">อัปโหลดรูปภาพ แล้วให้ AI บอกว่าในภาพมีเสื้อ กระโปรง หรือกางเกง</p>
+
+        <div class="class-chips">
+            <span class="chip" style="--c: var(--shirt)">👕 Shirt</span>
+            <span class="chip" style="--c: var(--skirt)">👗 Skirt</span>
+            <span class="chip" style="--c: var(--trousers)">👖 Trousers</span>
+        </div>
+    </header>
+
+    <main class="layout">
+        <!-- ซ้าย: อัปโหลด + รูป -->
+        <section class="card viewer">
+            <label id="dropZone" class="drop-zone" for="imageInput">
+                <input type="file" id="imageInput" accept="image/*" hidden>
+                <div class="drop-content" id="dropContent">
+                    <div class="drop-icon">📤</div>
+                    <p class="drop-title">ลากรูปมาวาง หรือคลิกเพื่อเลือกไฟล์</p>
+                    <p class="drop-hint">รองรับ JPG, PNG, WEBP</p>
+                </div>
+                <canvas id="canvas" width="640" height="640"></canvas>
+            </label>
+
+            <div class="toolbar">
+                <button id="changeBtn" class="btn btn-ghost" type="button" hidden>🔄 เปลี่ยนรูป</button>
+                <div class="slider-wrap">
+                    <label for="confSlider">ความมั่นใจขั้นต่ำ <b id="confValue">35%</b></label>
+                    <input type="range" id="confSlider" min="10" max="90" value="35">
+                </div>
+            </div>
+        </section>
+
+        <!-- ขวา: ผลลัพธ์ -->
+        <aside class="card results">
+            <div class="status-row">
+                <span id="statusDot" class="dot loading"></span>
+                <div id="label" class="status-text">กำลังโหลดโมเดล...</div>
+            </div>
+
+            <h2>สรุปผล</h2>
+            <div class="summary">
+                <div class="stat" style="--c: var(--shirt)">
+                    <span class="stat-num" id="count-0">0</span>
+                    <span class="stat-name">Shirt</span>
+                </div>
+                <div class="stat" style="--c: var(--skirt)">
+                    <span class="stat-num" id="count-1">0</span>
+                    <span class="stat-name">Skirt</span>
+                </div>
+                <div class="stat" style="--c: var(--trousers)">
+                    <span class="stat-num" id="count-2">0</span>
+                    <span class="stat-name">Trousers</span>
+                </div>
+            </div>
+
+            <h2>รายการที่ตรวจพบ</h2>
+            <ul id="detectionList" class="detection-list">
+                <li class="empty">ยังไม่มีผลลัพธ์ ลองอัปโหลดรูปดูนะ</li>
+            </ul>
+
+            <p id="timeInfo" class="time-info"></p>
+        </aside>
+    </main>
+
+    <footer class="footer">
+        แบบฝึกหัด 9 · เทรนด้วย Roboflow + YOLOv11 · ประมวลผลบนเบราว์เซอร์ ไม่มีการส่งรูปออกไปไหน
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/ort.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
